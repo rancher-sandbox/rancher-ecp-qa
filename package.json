@@ -1,5 +1,5 @@
 {
-  "name": "rancher-ecp-qa",
+  "name": "@rancher-ecp-qa/cypress-library",
   "version": "1.0.0",
   "description": "Common Cypress Library",
   "main": "index.ts",
