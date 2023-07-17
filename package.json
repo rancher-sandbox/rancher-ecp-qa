@@ -1,6 +1,6 @@
 {
   "name": "@rancher-ecp-qa/cypress-library",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Common Cypress Library",
   "main": "index.ts",
   "types:": "index.d.ts",
@@ -9,7 +9,7 @@
     "index.d.ts",
     "package.json",
     "package-lock.json",
-    "README.md" 
+    "README.md"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
