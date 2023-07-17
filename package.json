@@ -1,0 +1,23 @@
+{
+  "name": "@rancher-sandbox/rancher-ecp-qa",
+  "version": "1.0.0",
+  "description": "Common Cypress Library",
+  "main": "index.ts",
+  "types:": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rancher-sandbox/rancher-ecp-qa.git"
+  },
+  "author": "juadk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rancher-sandbox/rancher-ecp-qa/issues"
+  },
+  "homepage": "https://github.com/rancher-sandbox/rancher-ecp-qa#readme"
+}
