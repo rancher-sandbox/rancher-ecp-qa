@@ -1,14 +1,11 @@
 {
-  "name": "@rancher-sandbox/rancher-ecp-qa",
+  "name": "rancher-ecp-qa",
   "version": "1.0.0",
   "description": "Common Cypress Library",
   "main": "index.ts",
   "types:": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
   },
   "repository": {
     "type": "git",
