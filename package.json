@@ -4,6 +4,13 @@
   "description": "Common Cypress Library",
   "main": "index.ts",
   "types:": "index.d.ts",
+  "files": [
+    "index.ts",
+    "index.d.ts",
+    "package.json",
+    "package-lock.json",
+    "README.md" 
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
