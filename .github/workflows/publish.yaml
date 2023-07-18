@@ -17,12 +17,17 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: setup git config
+      - name: Setup git config
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-      - run: npm ci
-      - run: npm version ${{ github.event.inputs.version }}
-      - run: npm publish --access public
+      - name: Clean installation
+        run: npm ci
+      - name: Create new version
+        run: npm version ${{ github.event.inputs.version }}
+      - name: Publish to npmjs
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Commit the new version
+        run:  git push origin main
