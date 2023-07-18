@@ -1,8 +1,12 @@
 name: Publish Package to npmjs
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish [<newversion> | major | minor | patch ]'
+        required: true
+        default: 'patch'
+
 jobs:
   publish-to-npmjs:
     runs-on: ubuntu-latest
@@ -14,6 +18,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - run: npm version ${{ github.event.inputs.version }}
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
