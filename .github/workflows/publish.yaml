@@ -12,7 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # Setup .npmrc file to publish to npm
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
@@ -24,10 +25,12 @@ jobs:
       - name: Clean installation
         run: npm ci
       - name: Create new version
-        run: npm version ${{ github.event.inputs.version }}
+        run: npm version ${{ github.event.inputs.version }} -m "Upgrade to version %s"
       - name: Publish to npmjs
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Commit the new version
-        run:  git push origin main
+        run:  |
+          git push origin main
+          git push --tags
