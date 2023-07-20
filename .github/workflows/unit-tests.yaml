@@ -1,0 +1,21 @@
+name: Unit tests
+on:
+  pull_request:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Deploy rancher head
+        run: npm run start-rancher
+      - name: Build package from the current branch
+        run: npm run build-npm
+      - name: Run e2e tests
+        run: npm run start-unit-tests

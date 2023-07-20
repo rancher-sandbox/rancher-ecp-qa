@@ -1,3 +1,4 @@
+import * as cypressLib from '@rancher-ecp-qa/cypress-library';
 /*
 Copyright © 2022 - 2023 SUSE LLC
 
@@ -38,6 +39,7 @@ export function addRepository(repositoryName, repositoryURL, repositoryType) {
     .click();
     cy.clickNavMenu(['Apps', 'Repositories'])
   // Make sure we are in the 'Repositories' screen (test failed here before)
+  // Test fails sporadically here, screen stays in pending state forever
   cy.contains('header', 'Repositories')
     .should('be.visible');
   cy.contains('Create')
@@ -56,6 +58,31 @@ export function addRepository(repositoryName, repositoryURL, repositoryType) {
     cy.typeValue('Index URL', repositoryURL);
   }
   cy.clickButton('Create');
+  // Make sure the repo is active before leaving
+  cy.contains('Active '+ repositoryName)
+};
+
+/**
+ * Remove a Helm repository
+ * @param repositoryName : Name of the repository to delete
+ */
+export function deleteRepository(repositoryName) {
+  this.burgerMenuOpenIfClosed();
+  cy.contains('local')
+    .click();
+    cy.clickNavMenu(['Apps', 'Repositories'])
+  // Make sure we are in the 'Repositories' screen (test failed here before)
+  cy.contains('header', 'Repositories')
+    .should('be.visible');
+  cy.contains('Create')
+    .should('be.visible');
+  cy.contains('Active '+ repositoryName)
+    .click();
+  cy.clickButton('Delete');
+  cypressLib.confirmDelete();
+  // Make sure the repo is removed before leaving
+  cy.contains('Active '+ repositoryName)
+    .should('not.exist');
 };
 
 /**
@@ -90,8 +117,7 @@ export function checkClusterStatus(clusterName, clusterStatus, timeout) {
     cy.contains('Home')
       .click();
     // The new cluster must be in active state
-    cy.get('[data-node-id="fleet-default/'+clusterName+'"]')
-      .contains(clusterStatus,  {timeout: timeout});
+    cy.contains(clusterStatus + ' ' + clusterName,  {timeout: timeout});
 };
 
 /**
@@ -113,7 +139,7 @@ export function confirmDelete() {
 }
 
 /**
- * Create an user for the Rancher UI
+ * Create an user in the Rancher UI
  * @remarks : Only one role can be given for now
  * @param username : Name of the user
  * @param password : Password of the user
@@ -137,6 +163,28 @@ export function createUser(username, password, role) {
   cy.getBySel('form-save')
     .contains('Create')
     .click();
+  cy.contains(username).should('exist');
+}
+
+/**
+ * Delete an user in the Rancher UI
+ * @param username : Name of the user
+ */
+export function deleteUser(username) {
+  // Screen has to be big enough to display the 'Delete' button
+  cy.viewport(1920, 1080);
+  this.burgerMenuOpenIfClosed();
+  cy.contains('Users & Authentication')
+    .click();
+  cy.contains('.title', 'Users')
+    .should('exist');
+  cy.contains(username)
+    .click();
+  cy.clickButton('Delete');
+  cy.getBySel('prompt-remove-input')
+    .type(username);
+  cy.confirmDelete();
+  cy.contains(username).should('not.exist');
 }
 
 /**
@@ -166,6 +214,20 @@ export function enableExtensionSupport(withRancherRepo, isRancherHead) {
 cy.clickButton('OK');
 cy.get('.tabs', {timeout: 40000})
   .contains('Installed Available Updates All');
+};
+
+/**
+ * Disable the extension support
+ */
+export function disableExtensionSupport() {
+  cy.contains('Extensions')
+    .click();
+  cy.getBySel('extensions-page-menu')
+    .click();
+  cy.contains('Disable Extension Support')
+    .click();
+  cy.clickButton('Disable');
+  cy.contains('Extension support is not enabled', {timeout: 60000});
 };
 
 /**
