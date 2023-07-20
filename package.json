@@ -12,7 +12,10 @@
     "README.md"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-npm": "./scripts/build-npm",
+    "start-rancher": "./scripts/start-rancher",
+    "start-unit-tests": "./scripts/start-unit-tests"
   },
   "repository": {
     "type": "git",
@@ -23,5 +26,12 @@
   "bugs": {
     "url": "https://github.com/rancher-sandbox/rancher-ecp-qa/issues"
   },
-  "homepage": "https://github.com/rancher-sandbox/rancher-ecp-qa#readme"
+  "homepage": "https://github.com/rancher-sandbox/rancher-ecp-qa#readme",
+  "devDependencies": {
+    "cypress": "10.3.1",
+    "typescript": "4.1.6"
+  },
+  "dependencies": {
+    "@rancher-ecp-qa/cypress-library": "*"
+  }
 }

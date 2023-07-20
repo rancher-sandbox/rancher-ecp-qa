@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Install the packages
+npm install
+
+# Build the Cypress library from the current branch
+npm pack
+
+# Install the Cypress library from the current branch
+npm install rancher-ecp-qa-cypress-library-*.tgz
