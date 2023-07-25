@@ -1,6 +1,7 @@
 # Rancher ECP QA Cypress Library
 
 [![Unit tests](https://github.com/rancher-sandbox/rancher-ecp-qa/actions/workflows/unit-tests.yaml/badge.svg?branch=main)](https://github.com/rancher-sandbox/rancher-ecp-qa/actions/workflows/unit-tests.yaml)
+[![Code style](https://github.com/rancher-sandbox/rancher-ecp-qa/actions/workflows/lint.yaml/badge.svg?branch=main)](https://github.com/rancher-sandbox/rancher-ecp-qa/actions/workflows/lint.yaml)
 
 This npm package includes functions and custom Cypress commands shared between different Rancher products.
 
