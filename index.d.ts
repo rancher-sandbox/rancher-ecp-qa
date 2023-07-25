@@ -45,6 +45,8 @@ declare namespace Cypress {
      * @param args : Other arguments to pass
      * @returns : The element
      */
+    // 'args?: any' is really needed here!
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getBySel(dataTestAttribute: string, args?: any): Chainable;
 
     /**

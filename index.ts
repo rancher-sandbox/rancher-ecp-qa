@@ -259,7 +259,7 @@ Cypress.Commands.add('login', (
   password = Cypress.env('password'),
   cacheSession = Cypress.env('cache_session')) => {
     const login = () => {
-      let loginPath ="/v3-public/localProviders/local*";
+      const loginPath ="/v3-public/localProviders/local*";
       cy.intercept('POST', loginPath).as('loginReq');
       
       cy.visit('/auth/login');
@@ -310,16 +310,13 @@ Cypress.Commands.add('confirmDelete', () => {
 
 Cypress.Commands.add('typeValue', (label, value, noLabel, log=true) => {
   if (noLabel === true) {
-    cy.get(label)
-      .focus()
-      .clear()
-      .type(value, {log: log});
+    cy.get(label).as('label')
   } else {
-    cy.byLabel(label)
-      .focus()
-      .clear()
-      .type(value, {log: log});
+    cy.byLabel(label).as('label')
   }
+  cy.get('@label').focus()
+  cy.get('@label').clear()
+  cy.get('@label').type(value, {log: log})
 });
 
 Cypress.Commands.add('deleteAllResources', () => {  
