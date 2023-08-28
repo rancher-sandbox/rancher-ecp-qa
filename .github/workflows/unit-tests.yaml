@@ -19,3 +19,19 @@ jobs:
         run: npm run build-npm
       - name: Run e2e tests
         run: npm run start-unit-tests
+      - name: Upload Cypress screenshots
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots-basics-unit-tests
+          path: cypress/screenshots
+          retention-days: 7
+          if-no-files-found: ignore
+      - name: Upload Cypress videos
+        # Test run video is always captured, so this action uses "always()" condition
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-videos-basics-unit-tests
+          path: cypress/videos
+          retention-days: 7

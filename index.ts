@@ -32,8 +32,9 @@ export function accesMenu(menu) {
  * @param repositoryName : Name of the repository
  * @param repositoryURL : URL of the repository
  * @param repositoryType : Type of the repository
+ * @param repositoryBranch : Branch of the repository
  */
-export function addRepository(repositoryName, repositoryURL, repositoryType) {
+export function addRepository(repositoryName, repositoryURL, repositoryType, repositoryBranch) {
   this.burgerMenuOpenIfClosed();
   cy.contains('local')
     .click();
@@ -53,7 +54,7 @@ export function addRepository(repositoryName, repositoryURL, repositoryType) {
     cy.contains('Git repository')
       .click();
     cy.typeValue('Git Repo URL', repositoryURL);
-    cy.typeValue('Git Branch', 'main');
+    cy.typeValue('Git Branch', repositoryBranch);
   } else {
     cy.typeValue('Index URL', repositoryURL);
   }
