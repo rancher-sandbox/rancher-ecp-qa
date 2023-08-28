@@ -58,7 +58,7 @@ describe('Cypress Library e2e tests', () => {
 
   it('Check addRepository function', () => {
     cy.login();
-    cypressLib.addRepository('elemental-ui', 'https://github.com/rancher/elemental-ui.git', 'git');
+    cypressLib.addRepository('elemental-ui', 'https://github.com/rancher/elemental-ui.git', 'git', 'gh-pages');
   });
 
   it('Check clusterStatus function', () => {
