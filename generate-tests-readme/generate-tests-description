@@ -8,6 +8,7 @@
 # It currently supports these frameworks/languages:
 # - Ginkgo(Gomega)/Go
 # - Cypress/Typescript
+# - Playwright/Typescript (partial support)
 # - BATS/Bash
 
 function abort() {
@@ -36,28 +37,45 @@ for TST_FILE in $(ls ${EXT} 2>/dev/null); do
       FIELDS="\1\2"
       ;;
     ts)
-      REGEX="^[[:space:]]*(describe|it|by)"
-      FIELDS="\1"
+      # Cypress or Playwright framework?
+      if grep -q 'Cypress.config' ${TST_FILE} 2>/dev/null; then
+        REGEX="^[[:space:]]*(describe|it|by)"
+        FIELDS="\1"
+      elif grep -q 'playwright/test' ${TST_FILE} 2>/dev/null; then
+        REGEX="^[[:space:]]*(test\.describe\(|test\(|testUnix\(|testWin32\()"
+        FIELDS="\1"
+      fi
       ;;
   esac
 
-  # Extact the informations
-  TXT=$(
-    grep -h -E "${REGEX}" ${TST_FILE} \
-      | tr -d "('\"" \
-      | sed -E \
-            -e "s/${REGEX}/${FIELDS}: /" \
-            -e 's/,[[:space:]]*(func|Label).*//' \
-            -e 's/,[[:space:]]*\)[[:space:]]*=>[[:space:]]*\{//' \
-            -e 's/\{[[:space:]]*tags:.*\}//' \
-	    -e 's/(\{|\))$//' \
-            -e 's/,[[:space:]]*$//' \
-            -e 's/^[Dd]escribe:/- **Describe:**/' \
-            -e 's/^[Cc]ontext:/\t- **Context:**/' \
-            -e 's/^[Ii]t:/\t\t- **It:**/' \
-            -e 's/^[Bb]y:/\t\t\t-  **By:**/' \
-	    -e 's/^[tT]est:/\t\t- **Test:**/'
-  )
+  # Extract the informations
+  if grep -q 'playwright/test' ${TST_FILE} 2>/dev/null; then
+    TXT=$(
+      grep -h -E "${REGEX}" ${TST_FILE} \
+        | sed -E -e "s/${REGEX}/\1: /" \
+	| tr -d "()'\"" \
+	| sed -E -e 's/,[[:space:]]*(async|.*)[[:space:]]*=>[[:space:]]*\{//' \
+               -e 's/^test\.describe:/- **Describe:**/' \
+               -e 's/^([tT]est|[tT]estUnix|[tT]estWin32):/\t- **Test:**/'
+    )
+  else
+    TXT=$(
+      grep -h -E "${REGEX}" ${TST_FILE} \
+        | tr -d "('\"" \
+        | sed -E \
+              -e "s/${REGEX}/${FIELDS}: /" \
+              -e 's/,[[:space:]]*(func|Label).*//' \
+              -e 's/,[[:space:]]*\)[[:space:]]*=>[[:space:]]*\{//' \
+              -e 's/\{[[:space:]]*tags:.*\}//' \
+              -e 's/(\{|\))$//' \
+              -e 's/,[[:space:]]*$//' \
+              -e 's/^[Dd]escribe:/- **Describe:**/' \
+              -e 's/^[Cc]ontext:/\t- **Context:**/' \
+              -e 's/^[Ii]t:/\t\t- **It:**/' \
+              -e 's/^[Bb]y:/\t\t\t-  **By:**/' \
+              -e 's/^[tT]est:/\t\t- **Test:**/'
+    )
+  fi
 
   # If empty
   [[ -z "${TXT}" ]] && TXT="*No test defined!*"
