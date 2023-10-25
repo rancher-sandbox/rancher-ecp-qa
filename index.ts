@@ -35,7 +35,6 @@ export function accesMenu(menu) {
  * @param repositoryBranch : Branch of the repository
  */
 export function addRepository(repositoryName, repositoryURL, repositoryType, repositoryBranch) {
-  this.burgerMenuOpenIfClosed();
   cy.contains('local')
     .click();
     cy.clickNavMenu(['Apps', 'Repositories'])
@@ -68,7 +67,6 @@ export function addRepository(repositoryName, repositoryURL, repositoryType, rep
  * @param repositoryName : Name of the repository to delete
  */
 export function deleteRepository(repositoryName) {
-  this.burgerMenuOpenIfClosed();
   cy.contains('local')
     .click();
     cy.clickNavMenu(['Apps', 'Repositories'])
@@ -87,19 +85,7 @@ export function deleteRepository(repositoryName) {
 };
 
 /**
- * Check if the burger menu is open and open it if it's closed
- */
-export function burgerMenuOpenIfClosed() {
-  cy.get('body').then((body) => {
-    if (body.find('.menu.raised').length === 0) {
-      this.burgerMenuToggle();
-    };
-  });
-};
-
-/**
  * Click on the burger menu on the top left of the screen
- * @remarks : Used in burgerMenuOpenIfClosed()
  */
 export function burgerMenuToggle() {
   cy.getBySel('top-level-menu', {timeout: 12000})
@@ -114,7 +100,6 @@ export function burgerMenuToggle() {
  * @param timeout : Timeout for the check
  */
 export function checkClusterStatus(clusterName, clusterStatus, timeout) {
-  this.burgerMenuOpenIfClosed();
     cy.contains('Home')
       .click();
     // The new cluster must be in active state
@@ -148,7 +133,6 @@ export function confirmDelete() {
  */
 // TODO: Add the possibility to add multiple roles
 export function createUser(username, password, role) {
-  this.burgerMenuOpenIfClosed();
   cy.contains('Users & Authentication')
     .click();
   cy.contains('.title', 'Users')
@@ -174,7 +158,6 @@ export function createUser(username, password, role) {
 export function deleteUser(username) {
   // Screen has to be big enough to display the 'Delete' button
   cy.viewport(1920, 1080);
-  this.burgerMenuOpenIfClosed();
   cy.contains('Users & Authentication')
     .click();
   cy.contains('.title', 'Users')

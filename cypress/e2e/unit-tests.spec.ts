@@ -26,18 +26,6 @@ describe('Cypress Library e2e tests', () => {
     cypressLib.firstLogin();
   });
 
-  it('Check burgerMenuOpenIfClosed function', () => {
-    cy.login();
-    // Open the menu
-    cypressLib.burgerMenuOpenIfClosed();
-    cy.getBySel('side-menu')
-      .contains('Cluster Management');
-    // Should do nothing as the menu is already open
-    cypressLib.burgerMenuOpenIfClosed();
-    cy.getBySel('side-menu')
-      .contains('Cluster Management');
-  });
-
   it('Check burgerMenuToogle function', () => {
     cy.login();
     // Open the menu
@@ -52,7 +40,7 @@ describe('Cypress Library e2e tests', () => {
 
   it('Check accessMenu function', () => {
     cy.login();
-    cypressLib.burgerMenuOpenIfClosed();
+    cypressLib.burgerMenuToggle();
     cypressLib.accesMenu('Cluster Management');
   });
 
@@ -63,48 +51,54 @@ describe('Cypress Library e2e tests', () => {
 
   it('Check clusterStatus function', () => {
     cy.login();
+    cypressLib.burgerMenuToggle();
     cypressLib.checkClusterStatus('local', 'Active');
   });
 
   it('Check checkNavIcon function', () => {
     cy.login();
-    cypressLib.burgerMenuOpenIfClosed();
+    cypressLib.burgerMenuToggle();
     cypressLib.checkNavIcon('fleet');
   });
 
   it('Check confirmDelete function', () => {
     cy.login();
+    cypressLib.burgerMenuToggle();
     // confirmDelete function is called in deleteRepository function
     cypressLib.deleteRepository('elemental-ui');
   });
 
   it('Check createUser/deleteUser function with role', () => {
     cy.login();
+    cypressLib.burgerMenuToggle();
     cypressLib.createUser('mytestuserwithrole', 'mytestpassword', 'User-Base');
+    cypressLib.burgerMenuToggle();
     cypressLib.deleteUser('mytestuserwithrole');
   });
 
   it('Check createUser/deleteUser function without role', () => {
     cy.login();
+    cypressLib.burgerMenuToggle();
     cypressLib.createUser('mytestuserwithoutrole', 'mytestpassword');
+    cypressLib.burgerMenuToggle();
     cypressLib.deleteUser('mytestuserwithoutrole');
   });
 
   it('Check enableExtensionSupport function with rancher repo activated', () => {
     cy.login();
-    cypressLib.burgerMenuOpenIfClosed();
+    cypressLib.burgerMenuToggle();
     cypressLib.enableExtensionSupport(true);
   });
 
   it('Check disableExtensionSupport function', () => {
     cy.login();
-    cypressLib.burgerMenuOpenIfClosed();
+    cypressLib.burgerMenuToggle();
     cypressLib.disableExtensionSupport();
   });
 
   it('Check enableExtensionSupport function without rancher repo activated', () => {
     cy.login();
-    cypressLib.burgerMenuOpenIfClosed();
+    cypressLib.burgerMenuToggle();
     cypressLib.enableExtensionSupport(false, true);
   });
 });
