@@ -99,6 +99,6 @@ describe('Cypress Library e2e tests', () => {
   it('Check enableExtensionSupport function without rancher repo activated', () => {
     cy.login();
     cypressLib.burgerMenuToggle();
-    cypressLib.enableExtensionSupport(false, true);
+    cypressLib.enableExtensionSupport(false);
   });
 });
