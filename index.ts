@@ -175,9 +175,8 @@ export function deleteUser(username) {
  * Enable the extension support
  * @remarks : Disable the Rancher Repo if you provide your own repo
  * @param withRancherRepo : Add the Rancher Extension Repository - boolean
- * @param isRancherHead : Tell if the test run on rancher head - boolean
  */
-export function enableExtensionSupport(withRancherRepo, isRancherHead) {
+export function enableExtensionSupport(withRancherRepo) {
   cy.contains('Extensions')
     .click();
   // Make sure we are on the Extensions page
@@ -185,19 +184,14 @@ export function enableExtensionSupport(withRancherRepo, isRancherHead) {
   cy.clickButton('Enable');
   cy.contains('Enable Extension Support?')
   if (!withRancherRepo) {
-    if (isRancherHead) {
-      cy.contains('Add Official Rancher Extensions Repository')
-        .click();
-      cy.contains('Add Partners Extensions Repository')
-        .click();
-    } else {
-      cy.contains('Add the Rancher Extension Repository')
-        .click();
-    }
+    cy.contains('Add Official Rancher Extensions Repository')
+      .click();
+    cy.contains('Add Partners Extensions Repository')
+      .click();
   }
-cy.clickButton('OK');
-cy.get('.tabs', {timeout: 40000})
-  .contains('Installed Available Updates All');
+  cy.clickButton('OK');
+  cy.get('.tabs', {timeout: 40000})
+    .contains('Installed Available Updates All');
 };
 
 /**
