@@ -2,9 +2,10 @@
 
 # !! LET THIS SCRIPT IN THE GITHUB REPOSITORY !!
 # !!  EVEN IF IT IS NOT USED DIRECTLY BY CI   !!
-# !!    IT IS USED TO BOOSTRAP THE RUNNER     !!
+# !!    IT IS USED TO BOOTSTRAP THE RUNNER    !!
 
 # Variable(s)
+CI_FLAG=-ci-
 LV_NAME=lv
 VG_NAME=data
 GH_USER=gh-runner
@@ -14,7 +15,12 @@ declare -a NVME_DISK  # Force variable type to array
 
 # Just for logs
 echo "$0: started"
-#
+
+# Extract UUID
+# NOTE: HOSTNAME needs to be set here, to be sure to have the correct value
+HOSTNAME=$(hostname)
+UUID=${HOSTNAME#*${CI_FLAG}}
+
 # Get GitHub repository
 GH_REPO=$(${GCLOUD_BIN} secrets versions access latest --secret="GH_REPO_${UUID}")
 if [[ -z "${GH_REPO}" ]]; then
@@ -29,13 +35,11 @@ if [[ -z "${PAT_TOKEN}" ]]; then
   exit 1
 fi
 
-# Define HOST* variables
-HOST_PREFIX="${GH_REPO//\//-}-ci-"
-HOST_PATTERN="^${HOST_PREFIX}[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*\$"
-
 # Hostname can take times to be set
+HOST_PATTERN="^${GH_REPO//\//-}${CI_FLAG}[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*\$"
 (( SECONDS_TO_WAIT = SECONDS + 60 ))
 while (( SECONDS < SECONDS_TO_WAIT )); do
+  # NOTE: HOSTNAME needs to be re-set, as it may change upon last loop
   HOSTNAME=$(hostname)
   echo "$0: checking hostname: ${HOSTNAME}"
 
@@ -56,11 +60,6 @@ if (( UNVALID_HOSTNAME )); then
   exit 0
 fi
 
-# Extract UUID
-# NOTE: HOSTNAME needs to be set here, to be sure to have the correct value
-HOSTNAME=$(hostname)
-UUID=${HOSTNAME#${HOST_PREFIX}}
-
 # Configure LVM using striping I/O with Local SSD(s)
 NVME_DISK=($(ls /dev/nvme[0-9]*n[0-9]* 2>/dev/null))
 pvcreate -v ${NVME_DISK[*]}
@@ -75,8 +74,7 @@ useradd -d /home/${GH_USER} -g users -G docker,libvirt,google-sudoers -M ${GH_US
 chown -R ${GH_USER}:users /home/${GH_USER}
 
 # Install and configure GH runner (should be run with 'gh-runner' users)
-
-## Generate registration token
+# Generate registration token
 TOKEN=$(curl \
           -X POST \
           -H "Accept: application/vnd.github+json" \

@@ -1,6 +1,6 @@
 # !! LET THIS SCRIPT IN THE GITHUB REPOSITORY !!
 # !!  EVEN IF IT IS NOT USED DIRECTLY BY CI   !!
-# !!    IT IS USED TO BOOSTRAP THE RUNNER     !!
+# !!    IT IS USED TO BOOTSTRAP THE RUNNER    !!
 [Unit]
 Description=Configure GitHub Runner
 
