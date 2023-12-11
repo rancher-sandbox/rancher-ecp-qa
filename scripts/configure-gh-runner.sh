@@ -16,6 +16,30 @@ declare -a NVME_DISK  # Force variable type to array
 # Just for logs
 echo "$0: started"
 
+# Hostname can take times to be set, we have to verify that it is not 'localhost'
+(( SECONDS_TO_WAIT = SECONDS + 120 ))
+while (( SECONDS < SECONDS_TO_WAIT )); do
+  # NOTE: HOSTNAME needs to be re-set, as it may change upon last loop
+  HOSTNAME=$(hostname)
+  echo "$0: checking hostname: ${HOSTNAME}"
+
+  # Break the loop if hostname matches the pattern
+  if [[ "${HOSTNAME}" != "localhost" ]]; then
+    UNVALID_HOSTNAME=0
+    break
+  fi
+
+  # Wait a little before checking again
+  sleep 10
+done
+
+# Continue only if hostname is set!
+if (( UNVALID_HOSTNAME )); then
+  # End script without error, can be "normal" if we are re-creating an image
+  echo "$0: wrong hostname detected, not a runner! stopped"
+  exit 0
+fi
+
 # Extract UUID
 # NOTE: HOSTNAME needs to be set here, to be sure to have the correct value
 HOSTNAME=$(hostname)
@@ -33,31 +57,6 @@ PAT_TOKEN=$(${GCLOUD_BIN} secrets versions access latest --secret="PAT_TOKEN_${U
 if [[ -z "${PAT_TOKEN}" ]]; then
   echo "$0: PAT token not found! stopped"
   exit 1
-fi
-
-# Hostname can take times to be set
-HOST_PATTERN="^${GH_REPO//\//-}${CI_FLAG}[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*-[a-f0-9][a-f0-9]*\$"
-(( SECONDS_TO_WAIT = SECONDS + 60 ))
-while (( SECONDS < SECONDS_TO_WAIT )); do
-  # NOTE: HOSTNAME needs to be re-set, as it may change upon last loop
-  HOSTNAME=$(hostname)
-  echo "$0: checking hostname: ${HOSTNAME}"
-
-  # Break the loop if hostname matches the pattern
-  if [[ "${HOSTNAME}" =~ ${HOST_PATTERN} ]]; then
-    UNVALID_HOSTNAME=0
-    break
-  fi
-
-  # Wait a little before checking again
-  sleep 10
-done
-
-# Continue only if hostname matches the pattern
-if (( UNVALID_HOSTNAME )); then
-  # End script without error
-  echo "$0: wrong hostname detected, not a runner! stopped"
-  exit 0
 fi
 
 # Configure LVM using striping I/O with Local SSD(s)
