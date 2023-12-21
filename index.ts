@@ -40,6 +40,8 @@ export function addRepository(repositoryName, repositoryURL, repositoryType, rep
     cy.clickNavMenu(['Apps', 'Repositories'])
   // Make sure we are in the 'Repositories' screen (test failed here before)
   // Test fails sporadically here, screen stays in pending state forever
+  // Ensuring "Loading..." overlay screen is not present.
+  cy.contains('Loading...', {timeout: 35000}).should('not.exist');
   cy.contains('header', 'Repositories')
     .should('be.visible');
   cy.contains('Create')
