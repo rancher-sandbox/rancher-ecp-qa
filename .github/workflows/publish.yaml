@@ -11,25 +11,35 @@ jobs:
   publish-to-npmjs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_TOKEN }}
-      - uses: actions/setup-node@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        env:
+          NODE_VERSION: current
         with:
-          node-version: '16.x'
+          node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
+
       - name: Setup git config
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
+
       - name: Clean installation
         run: npm ci
+
       - name: Create new version
         run: npm version ${{ github.event.inputs.version }} -m "Upgrade to version %s"
+
       - name: Publish to npmjs
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Commit the new version
         run:  |
           git push origin main
