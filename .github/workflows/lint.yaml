@@ -15,16 +15,18 @@ jobs:
       NODE_VERSION: current
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+
       - name: Install npm
         run: |
           npm install --save-dev
           npm ls --depth=0
+
       - name: Analysis
-        uses: sibiraj-s/action-eslint@v3
-        with:
-          extensions: 'js,ts'
+        run: |
+          npm run lint
