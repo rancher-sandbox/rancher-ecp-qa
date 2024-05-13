@@ -149,8 +149,8 @@ export function createUser(username, password, role, uncheckStandardUser=false) 
     .click();
   } 
   if (uncheckStandardUser === true) {
-  cy.get('span[aria-label="Standard User"]').scrollIntoView;
-  cy.contains('Standard User').should('be.visible');
+  cy.get('span[aria-label="Standard User"]').scrollIntoView();
+  cy.contains('Standard User').should('exist');
   cy.get('span[aria-label="Standard User"]').click();
   }
   cy.getBySel('form-save')
