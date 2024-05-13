@@ -144,6 +144,8 @@ export function createUser(username, password, role) {
   cy.typeValue('New Password', password);
   cy.typeValue('Confirm Password', password);
   if (role) {
+    // Uncheck "Standard User" marked by default first
+    cy.get('span[aria-label="Standard User"]').click();
     cy.contains(role)
       .click();
   }
