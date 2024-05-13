@@ -88,15 +88,17 @@ describe('Cypress Library e2e tests', () => {
     cy.login();
     cypressLib.burgerMenuToggle();
     cypressLib.createUser('mytestuserwithrole', 'mytestpassword', 'User-Base', true);
-    // Log out
-    cy.get('.user.user-menu').click()
-    cy.contains('Log Out').should('be.visible').click();
-    // Log in with new user
+    // Log out with admin role and login with "User-Base" role to check
+    // "User-base" does not have these options available
+    cypressLib.logout();
     cy.login('mytestuserwithrole', 'mytestpassword');
     cypressLib.burgerMenuToggle();
-    // Check "User-base" does not have these options available
     cy.contains('Continue Delivery').should('not.exist');
     cy.contains('Cluster Management').should('not.exist');
+    // Log out as user and login back as admin to delete created user
+    cypressLib.logout();
+    cy.login();
+    cypressLib.burgerMenuToggle();
     cypressLib.deleteUser('mytestuserwithrole');
   });
 

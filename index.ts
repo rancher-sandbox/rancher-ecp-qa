@@ -180,6 +180,16 @@ export function deleteUser(username) {
 }
 
 /**
+ * Logout with the current user
+ * @remarks : Useful when testing role changes
+ */
+export function logout() {
+  cy.get('.user.user-menu').click()
+  cy.contains('Log Out').should('be.visible').click();
+  cy.contains('You have been logged out.').should('be.visible')
+} 
+
+/**
  * Enable the extension support
  * @remarks : Disable the Rancher Repo if you provide your own repo
  * @param withRancherRepo : Add the Rancher Extension Repository - boolean
