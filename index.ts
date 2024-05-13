@@ -132,9 +132,10 @@ export function confirmDelete() {
  * @param username : Name of the user
  * @param password : Password of the user
  * @param role : Role of the user
+ * @param uncheckStandardUser : Uncheck "Standard User" marked by default
  */
 // TODO: Add the possibility to add multiple roles
-export function createUser(username, password, role) {
+export function createUser(username, password, role, uncheckStandardUser=false) {
   cy.contains('Users & Authentication')
     .click();
   cy.contains('.title', 'Users')
@@ -144,10 +145,13 @@ export function createUser(username, password, role) {
   cy.typeValue('New Password', password);
   cy.typeValue('Confirm Password', password);
   if (role) {
-    // Uncheck "Standard User" marked by default first
-    cy.get('span[aria-label="Standard User"]').click();
     cy.contains(role)
-      .click();
+    .click();
+  } 
+  if (uncheckStandardUser === true) {
+  cy.get('span[aria-label="Standard User"]').scrollIntoView;
+  cy.contains('Standard User').should('be.visible');
+  cy.get('span[aria-label="Standard User"]').click();
   }
   cy.getBySel('form-save')
     .contains('Create')

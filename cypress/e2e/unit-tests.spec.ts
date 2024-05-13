@@ -84,6 +84,22 @@ describe('Cypress Library e2e tests', () => {
     cypressLib.deleteUser('mytestuserwithoutrole');
   });
 
+  it('Check createUser/deleteUser function with "User-Base" role and uncheck "Standard User"', () => {
+    cy.login();
+    cypressLib.burgerMenuToggle();
+    cypressLib.createUser('mytestuserwithrole', 'mytestpassword', 'User-Base', true);
+    // Log out
+    cy.get('.user.user-menu').click()
+    cy.contains('Log Out').should('be.visible').click();
+    // Log in with new user
+    cy.login('mytestuserwithrole', 'mytestpassword');
+    cypressLib.burgerMenuToggle();
+    // Check "User-base" does not have these options available
+    cy.contains('Continue Delivery').should('not.exist');
+    cy.contains('Cluster Management').should('not.exist');
+    cypressLib.deleteUser('mytestuserwithrole');
+  });
+
   it('Check enableExtensionSupport function with rancher repo activated', () => {
     cy.login();
     cypressLib.burgerMenuToggle();
