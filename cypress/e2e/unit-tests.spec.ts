@@ -102,6 +102,26 @@ describe('Cypress Library e2e tests', () => {
     cypressLib.deleteUser('mytestuserwithrole');
   });
 
+it('Check createUser/deleteUser function with "Standard User" role', () => {
+  cy.login();
+  cypressLib.burgerMenuToggle();
+  // Given that Standard User is checked by default, no need to add role
+  cy.createUser('mytestuserwithrole', 'mytestpassword');
+  // Log out with admin role and login with "Standard User" role to check
+  // "Standard User" does not have some options available and has some others
+  cy.logout();
+  cy.login('mytestuserwithrole', 'mytestpassword');
+  cypressLib.burgerMenuToggle();
+  cy.contains('Continue Delivery').should('not.exist');
+  cy.contains('Extensions').should('not.exist');
+  cy.contains('Cluster Management').should('exist');
+  // Log out as user and login back as admin to delete created user
+  cy.logout();
+  cy.login();
+  cypressLib.burgerMenuToggle();
+  cypressLib.deleteUser('mytestuserwithrole');
+});
+
   it('Check enableExtensionSupport function with rancher repo activated', () => {
     cy.login();
     cypressLib.burgerMenuToggle();
