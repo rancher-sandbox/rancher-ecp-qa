@@ -184,9 +184,9 @@ export function deleteUser(username) {
  * @remarks : Useful when testing role changes
  */
 export function logout() {
-  cy.get('.user.user-menu').click()
-  cy.contains('Log Out').should('be.visible').click();
-  cy.contains('You have been logged out.').should('be.visible')
+  cy.get('.user.user-menu').click({ force: true });
+  cy.contains('Log Out').should('be.visible').click({ force: true });
+  cy.contains('You have been logged out.').should('be.visible');
 } 
 
 /**
