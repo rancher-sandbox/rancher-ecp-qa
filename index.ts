@@ -1,6 +1,6 @@
 import * as cypressLib from '@rancher-ecp-qa/cypress-library';
 /*
-Copyright © 2022 - 2023 SUSE LLC
+Copyright © 2022 - 2024 SUSE LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ export function addRepository(repositoryName, repositoryURL, repositoryType, rep
   }
   cy.clickButton('Create');
   // Make sure the repo is active before leaving
-  cy.contains('Active '+ repositoryName)
+  cy.contains(new RegExp('Active.*'+repositoryName))
 };
 
 /**
@@ -77,12 +77,12 @@ export function deleteRepository(repositoryName) {
     .should('be.visible');
   cy.contains('Create')
     .should('be.visible');
-  cy.contains('Active '+ repositoryName)
+  cy.contains(new RegExp('Active.*'+repositoryName))
     .click();
   cy.clickButton('Delete');
   cypressLib.confirmDelete();
   // Make sure the repo is removed before leaving
-  cy.contains('Active '+ repositoryName)
+  cy.contains(new RegExp('Active.*'+repositoryName))
     .should('not.exist');
 };
 
