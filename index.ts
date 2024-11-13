@@ -105,7 +105,7 @@ export function checkClusterStatus(clusterName, clusterStatus, timeout) {
     cy.contains('Home')
       .click();
     // The new cluster must be in active state
-    cy.contains(clusterStatus + ' ' + clusterName,  {timeout: timeout});
+    cy.contains(new RegExp(clusterStatus+'.*'+clusterName),  {timeout: timeout});
 };
 
 /**
