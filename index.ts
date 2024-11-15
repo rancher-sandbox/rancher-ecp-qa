@@ -99,13 +99,15 @@ export function burgerMenuToggle() {
  * @remarks : Checked in the Home page
  * @param clusterName : Name of the cluster
  * @param clusterStatus : Expected status of the cluster
+ * @param rancherVersion : Rancher version
  * @param timeout : Timeout for the check
  */
-export function checkClusterStatus(clusterName, clusterStatus, timeout) {
-    cy.contains('Home')
-      .click();
-    // The new cluster must be in active state
-    cy.contains(new RegExp(clusterStatus+'.*'+clusterName),  {timeout: timeout});
+export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, timeout) {
+  cy.contains('Home')
+    .click();
+    (rancherVersion == '2.10') ?
+    cy.contains(clusterStatus+clusterName,  {timeout: timeout}) :
+    cy.contains(clusterStatus+' '+clusterName,  {timeout: timeout});
 };
 
 /**
