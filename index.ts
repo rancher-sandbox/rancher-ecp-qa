@@ -35,7 +35,8 @@ export function accesMenu(menu) {
  * @param repositoryBranch : Branch of the repository
  */
 export function addRepository(repositoryName, repositoryURL, repositoryType, repositoryBranch) {
-  cy.contains('local')
+  cy.getBySel('side-menu')
+    .contains('local')
     .click();
     cy.clickNavMenu(['Apps', 'Repositories'])
   // Make sure we are in the 'Repositories' screen (test failed here before)
@@ -69,9 +70,10 @@ export function addRepository(repositoryName, repositoryURL, repositoryType, rep
  * @param repositoryName : Name of the repository to delete
  */
 export function deleteRepository(repositoryName) {
-  cy.contains('local')
+  cy.getBySel('side-menu')
+    .contains('local')
     .click();
-    cy.clickNavMenu(['Apps', 'Repositories'])
+  cy.clickNavMenu(['Apps', 'Repositories'])
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories')
     .should('be.visible');
@@ -105,7 +107,7 @@ export function burgerMenuToggle() {
 export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, timeout) {
   cy.contains('Home')
     .click();
-    (rancherVersion == '2.10') ?
+    (rancherVersion != '2.9') ?
     cy.contains(clusterStatus+clusterName,  {timeout: timeout}) :
     cy.contains(clusterStatus+' '+clusterName,  {timeout: timeout});
 };
@@ -192,6 +194,8 @@ export function logout() {
 } 
 
 /**
+ * DEPRECATED ! not needed anymore since Rancher 2.9
+ * 
  * Enable the extension support
  * @remarks : Disable the Rancher Repo if you provide your own repo
  * @param withRancherRepo : Add the Rancher Extension Repository - boolean
@@ -214,6 +218,7 @@ export function enableExtensionSupport(withRancherRepo) {
 
 /**
  * Disable the extension support
+ * DEPRECATED ! not needed anymore since Rancher 2.9
  */
 export function disableExtensionSupport() {
   cy.contains('Extensions')
