@@ -289,7 +289,7 @@ Cypress.Commands.add("getBySel", (selector, ...args) => {
 
 Cypress.Commands.add('byLabel', (label) => {
   cy.get('.labeled-input')
-    .contains(label)
+    .contains(new RegExp(`^${label}`))
     .siblings('input');
 });
 
