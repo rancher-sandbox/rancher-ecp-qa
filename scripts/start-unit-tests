@@ -1,4 +1,4 @@
 
 #!/usr/bin/env bash
 
-./node_modules/cypress/bin/cypress run
+./node_modules/cypress/bin/cypress run --env RANCHER_VERSION=$1

@@ -53,7 +53,7 @@ describe('Cypress Library e2e tests', () => {
   it('Check clusterStatus function', () => {
     cy.login();
     cypressLib.burgerMenuToggle();
-    cypressLib.checkClusterStatus('local', 'Active');
+    cypressLib.checkClusterStatus('local', 'Active', Cypress.env('RANCHER_VERSION'), 10000);
   });
 
   it('Check checkNavIcon function', () => {
