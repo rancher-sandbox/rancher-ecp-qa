@@ -104,7 +104,7 @@ export function burgerMenuToggle() {
  * @param rancherVersion : Rancher version
  * @param timeout : Timeout for the check
  */
-export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, timeout) {
+export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, timeout = 10000) {
   cy.contains('Home')
     .click();
     (rancherVersion != '2.9') ?
