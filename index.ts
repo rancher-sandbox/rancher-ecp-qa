@@ -107,7 +107,7 @@ export function burgerMenuToggle() {
 export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, timeout = 10000) {
   cy.contains('Home')
     .click();
-    (rancherVersion != '2.9') ?
+    (rancherVersion != 'v2.9-head') ?
     cy.contains(clusterStatus+clusterName,  {timeout: timeout}) :
     cy.contains(clusterStatus+' '+clusterName,  {timeout: timeout});
 };

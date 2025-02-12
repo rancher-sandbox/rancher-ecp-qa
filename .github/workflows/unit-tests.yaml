@@ -6,6 +6,15 @@ on:
 
 jobs:
   unit-tests:
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        rancher_version:
+          - head
+          - v2.9-head
+          - v2.10-head
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -19,20 +28,24 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Deploy rancher head
+      - name: Deploy rancher 
         run: npm run start-rancher
+        env: 
+          RANCHER_VERSION: ${{ matrix.rancher_version }}
 
       - name: Build package from the current branch
         run: npm run build-npm
 
       - name: Run e2e tests
         run: npm run start-unit-tests
+        env: 
+          RANCHER_VERSION: ${{ matrix.rancher_version }}
 
       - name: Upload Cypress screenshots
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-screenshots-basics-unit-tests
+          name: cypress-screenshots-${{ matrix.rancher_version }}
           path: cypress/screenshots
           retention-days: 7
           if-no-files-found: ignore
@@ -42,6 +55,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-videos-basics-unit-tests
+          name: cypress-videos-${{ matrix.rancher_version }}
           path: cypress/videos
           retention-days: 7
