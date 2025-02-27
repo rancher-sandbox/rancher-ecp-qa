@@ -153,9 +153,20 @@ export function createUser(username, password, role, uncheckStandardUser=false) 
     .click();
   } 
   if (uncheckStandardUser === true) {
-  cy.get('span[aria-label="Standard User"]').scrollIntoView();
-  cy.contains('Standard User').should('exist');
-  cy.get('span[aria-label="Standard User"]').click();
+    cy.get('body').then((body) => {
+      if (body.find('span[aria-label="Standard User"]').length) {
+        cy.get('span[aria-label="Standard User"]')
+          .scrollIntoView()
+          .should('exist')
+          .click();
+      }
+      else if (body.find('div[data-testid="grb-checkbox-user"] > .checkbox-container').length) {
+        cy.get('div[data-testid="grb-checkbox-user"] > .checkbox-container')
+          .contains('Standard User')
+          .scrollIntoView()
+          .click();
+      }
+    })    
   }
   cy.getBySel('form-save')
     .contains('Create')
