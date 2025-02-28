@@ -155,15 +155,15 @@ export function createUser(username, password, role, uncheckStandardUser=false) 
   if (uncheckStandardUser === true) {
     cy.get('body').then((body) => {
       if (body.find('span[aria-label="Standard User"]').length) {
+        cy.get('span[aria-label="Standard User"]').scrollIntoView();
         cy.get('span[aria-label="Standard User"]')
-          .scrollIntoView()
-          .should('be.visible')
+          .should('be.visible')        
           .click();
       }
       else if (body.find('div[data-testid="grb-checkbox-user"] > .checkbox-container').length) {
+        cy.get('div[data-testid="grb-checkbox-user"] > .checkbox-container').scrollIntoView();
         cy.get('div[data-testid="grb-checkbox-user"] > .checkbox-container')
           .contains('Standard User')
-          .scrollIntoView()
           .should('be.visible')
           .click();
       }
