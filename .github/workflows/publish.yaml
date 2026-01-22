@@ -7,6 +7,9 @@ on:
         required: true
         default: 'patch'
 
+permissions:
+  id-token: write  # Required for OIDC
+
 jobs:
   publish-to-npmjs:
     runs-on: ubuntu-latest
@@ -36,9 +39,7 @@ jobs:
         run: npm version ${{ github.event.inputs.version }} -m "Upgrade to version %s"
 
       - name: Publish to npmjs
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
 
       - name: Commit the new version
         run:  |
