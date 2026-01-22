@@ -12,8 +12,8 @@ jobs:
       matrix:
         rancher_version:
           - head
-          - v2.9-head
-          - v2.10-head
+          - v2.12-head
+          - v2.13-head
 
     runs-on: ubuntu-latest
     steps:
