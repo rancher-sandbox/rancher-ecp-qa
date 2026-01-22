@@ -108,7 +108,7 @@ export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, t
   cy.contains('Home')
     .click();
     (rancherVersion != 'v2.9-head') ?
-    cy.contains(clusterStatus+clusterName,  {timeout: timeout}) :
+    cy.contains(new RegExp(clusterStatus+'.*'+clusterName), {timeout: timeout}) :
     cy.contains(clusterStatus+' '+clusterName,  {timeout: timeout});
 };
 
@@ -272,9 +272,9 @@ Cypress.Commands.add('login', (
   password = Cypress.env('password'),
   cacheSession = Cypress.env('cache_session')) => {
     const login = () => {
-      const loginPath ="/v3-public/localProviders/local*";
+      const loginPath = new RegExp('^\/v(1|3)-public\/.*login$')
       cy.intercept('POST', loginPath).as('loginReq');
-      
+
       cy.visit('/auth/login');
 
       cy.getBySel('local-login-username')

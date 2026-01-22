@@ -18,7 +18,7 @@ echo "Waiting for dashboard UI to be reachable ..."
 
 okay=0
 
-while [ $okay -lt 20 ]; do
+while [ $okay -lt 30 ]; do
   STATUS=$(curl --silent --head -k https://127.0.0.1/dashboard/ | awk '/^HTTP/{print $2}')
 
   echo "Status: $STATUS (Try: $okay)"
