@@ -40,8 +40,8 @@ declare namespace Cypress {
 
     /**
      * Yields elements with a data-test attribute that match a specified selector.
-     * @remarks : data-testid attribute is used in the Rancher codebase to identify elements 
-     * @param dataTestAttribute : Attribute of the element 
+     * @remarks : data-testid attribute is used in the Rancher codebase to identify elements
+     * @param dataTestAttribute : Attribute of the element
      * @param args : Other arguments to pass
      * @returns : The element
      */

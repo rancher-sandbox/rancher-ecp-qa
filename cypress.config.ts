@@ -12,11 +12,19 @@ export default defineConfig({
     // You may want to clean this up later by importing these.
     experimentalSessionAndOrigin: true,
     supportFile: false,
+    // Do not allow using Cypress.env() on Cypress versions with deprecated Cypress.env() function
+    allowCypressEnv: false,
     specPattern:
-      'cypress/e2e/*.spec.ts', 
+      'cypress/e2e/*.spec.ts',
     baseUrl,
   },
+  // Needed for Cypress.env() to work in the library functions
   env: {
+    password: password,
+    username: username
+  },
+  // Needed for Cypress.expose() to work in the library functions
+  expose: {
     password: password,
     username: username
   }

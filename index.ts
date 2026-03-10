@@ -1,4 +1,3 @@
-import * as cypressLib from '@rancher-ecp-qa/cypress-library';
 /*
 Copyright © 2022 - 2025 SUSE LLC
 
@@ -19,11 +18,37 @@ limitations under the License.
 /**
  * Click on the menu given as parameter
  * @remarks : Mostly use in the burger menu
- * @param menu : The menu to click on 
+ * @param menu : The menu to click on
  */
 export function accesMenu(menu) {
   cy.contains(menu)
     .click();
+}
+
+/**
+ * Get environment variable from Cypress (backward compatible)
+ * Works with both Cypress.env() and newer exposure patterns.
+ * @param key : The environment variable key
+ * @returns : The environment variable value or undefined
+ */
+export function getCypressEnv(key) {
+  // 1. Safety check: Ensure we are running in a Cypress environment
+  if (typeof Cypress === 'undefined') {
+    return undefined;
+  }
+
+  // 2. Try the "New" API Cypress.expose() if it exists
+  if (typeof Cypress.expose === 'function') {
+    const exposed = Cypress.expose();
+    return exposed ? exposed[key] : undefined;
+  }
+
+  // 3. Fallback to the classic Cypress.env()
+  if (typeof Cypress.env === 'function') {
+    return Cypress.env(key);
+  }
+
+  return undefined;
 }
 
 /**
@@ -82,7 +107,7 @@ export function deleteRepository(repositoryName) {
   cy.contains(new RegExp('Active.*'+repositoryName))
     .click();
   cy.clickButton('Delete');
-  cypressLib.confirmDelete();
+  confirmDelete();
   // Make sure the repo is removed before leaving
   cy.contains(new RegExp('Active.*'+repositoryName))
     .should('not.exist');
@@ -120,7 +145,7 @@ export function checkClusterStatus(clusterName, clusterStatus, rancherVersion, t
  */
 export function checkNavIcon(iconName) {
   return cy.get('.option .icon.group-icon.icon-'+iconName);
-} 
+}
 
 /**
  * Confirm the deletion of an object
@@ -151,13 +176,13 @@ export function createUser(username, password, role, uncheckStandardUser=false) 
   if (role) {
     cy.contains(role)
     .click();
-  } 
+  }
   if (uncheckStandardUser === true) {
     cy.get('body').then((body) => {
       if (body.find('span[aria-label="Standard User"]').length) {
         cy.get('span[aria-label="Standard User"]').scrollIntoView();
         cy.get('span[aria-label="Standard User"]')
-          .should('be.visible')        
+          .should('be.visible')
           .click();
       }
       else if (body.find('div[data-testid="grb-checkbox-user"] > .checkbox-container').length) {
@@ -167,7 +192,7 @@ export function createUser(username, password, role, uncheckStandardUser=false) 
           .should('be.visible')
           .click();
       }
-    })    
+    })
   }
   cy.getBySel('form-save')
     .contains('Create')
@@ -203,11 +228,11 @@ export function logout() {
   cy.get('.user.user-menu, [data-testid="nav_header_showUserMenu"]').click({ force: true });
   cy.contains('Log Out').should('be.visible').click({ force: true });
   cy.contains('You have been logged out.').should('be.visible');
-} 
+}
 
 /**
  * DEPRECATED ! not needed anymore since Rancher 2.9
- * 
+ *
  * Enable the extension support
  * @remarks : Disable the Rancher Repo if you provide your own repo
  * @param withRancherRepo : Add the Rancher Extension Repository - boolean
@@ -251,7 +276,7 @@ export function firstLogin() {
   cy.get("span").then($text => {
     if ($text.text().includes('your first time visiting Rancher')) {
       cy.get('input')
-        .type(Cypress.env('password'), {log: false});
+        .type(getCypressEnv('password'), {log: false});
       cy.clickButton('Log in with Local User');
       cy.contains('By checking')
         .click('left');
@@ -268,9 +293,9 @@ export function firstLogin() {
 // ///////////////////////////////
 
 Cypress.Commands.add('login', (
-  username = Cypress.env('username'),
-  password = Cypress.env('password'),
-  cacheSession = Cypress.env('cache_session')) => {
+  username = getCypressEnv('username'),
+  password = getCypressEnv('password'),
+  cacheSession = getCypressEnv('cache_session')) => {
     const login = () => {
       const loginPath = new RegExp('^\/v(1|3)-public\/.*login$')
       cy.intercept('POST', loginPath).as('loginReq');
@@ -287,7 +312,7 @@ Cypress.Commands.add('login', (
         .click();
       cy.wait('@loginReq');
       cy.getBySel('banner-title').contains('Welcome to Rancher');
-      } 
+      }
 
     if (cacheSession) {
       cy.session([username, password], login);
@@ -332,7 +357,7 @@ Cypress.Commands.add('typeValue', (label, value, noLabel, log=true) => {
   cy.get('@label').type(value, {log: log})
 });
 
-Cypress.Commands.add('deleteAllResources', () => {  
+Cypress.Commands.add('deleteAllResources', () => {
   cy.get('[width="30"] > .checkbox-outer-container')
     .click();
   cy.getBySel('sortable-table-promptRemove')
