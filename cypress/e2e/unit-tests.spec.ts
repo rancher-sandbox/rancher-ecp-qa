@@ -12,7 +12,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-/* 
+/*
 We only test the functions and not the custom cypress commands
 because there are called in the functions. No need to duplicate
 the tests.
@@ -53,7 +53,7 @@ describe('Cypress Library e2e tests', () => {
   it('Check clusterStatus function', () => {
     cy.login();
     cypressLib.burgerMenuToggle();
-    cypressLib.checkClusterStatus('local', 'Active', Cypress.env('RANCHER_VERSION'), 10000);
+    cypressLib.checkClusterStatus('local', 'Active', cypressLib.getCypressEnv('RANCHER_VERSION'), 10000);
   });
 
   it('Check checkNavIcon function', () => {
