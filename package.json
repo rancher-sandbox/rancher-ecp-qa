@@ -1,6 +1,6 @@
 {
   "name": "@rancher-ecp-qa/cypress-library",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Common Cypress Library",
   "main": "index.ts",
   "types:": "index.d.ts",
