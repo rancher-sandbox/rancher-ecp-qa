@@ -18,19 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         env:
           NODE_VERSION: current
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Deploy rancher 
+      - name: Deploy rancher
         run: npm run start-rancher
-        env: 
+        env:
           RANCHER_VERSION: ${{ matrix.rancher_version }}
 
       - name: Build package from the current branch
@@ -38,12 +38,12 @@ jobs:
 
       - name: Run e2e tests
         run: npm run start-unit-tests
-        env: 
+        env:
           RANCHER_VERSION: ${{ matrix.rancher_version }}
 
       - name: Upload Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: cypress-screenshots-${{ matrix.rancher_version }}
           path: cypress/screenshots
@@ -53,7 +53,7 @@ jobs:
       - name: Upload Cypress videos
         # Test run video is always captured, so this action uses "always()" condition
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
         with:
           name: cypress-videos-${{ matrix.rancher_version }}
           path: cypress/videos
