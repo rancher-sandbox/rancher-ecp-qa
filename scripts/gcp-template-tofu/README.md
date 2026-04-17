@@ -55,22 +55,57 @@ After image baking, initialize and apply OpenTofu:
 
 ```bash
 tofu init
+tofu plan
 tofu apply
 ```
 
 The apply output includes `latest_template_name` value (the GCP instance template name).
 Use this value in GitHub workflows to launch runner VMs from the correct template.
 
+## Create another template without deleting the old one
+
+By default, OpenTofu ensures that the infrastructure matches the code. If you update the configuration, it will attempt to replace the existing template. To prevent this and keep the old template active in GCP while creating a new one, follow these steps:
+
+### 1. Resource protection
+This repository already sets `prevent_destroy = true` on `google_compute_instance_template.template`, so no extra action is needed here. Keep this safeguard in place to avoid accidental deletion during `tofu apply`.
+
+```hcl
+lifecycle {
+  prevent_destroy = true
+}
+```
+
+### 2. Untrack the Existing Resource
+To "detach" the current template from OpenTofu's management without deleting it from Google Cloud, use the `state rm` command. This tells OpenTofu to "forget" the resource while leaving it alive in GCP:
+
+```bash
+tofu state rm google_compute_instance_template.template
+```
+
+### 3. Apply the New Configuration
+Once the state is cleared, OpenTofu no longer "sees" the old template in its inventory. When you run `apply` again, it will treat the configuration as a brand-new resource and generate a new version:
+
+```bash
+tofu apply
+```
+
+The previous template remains in GCP as an "unmanaged" resource, allowing existing runners or workflows to continue using it until you manually delete it via the GCP Console or CLI.
+
 ## Cleanup
 
-If the instance template become outdated you may remove OpenTofu-managed resources by:
+To remove resources that are **still tracked** in the OpenTofu state file:
+
+1. **Disable Protection:** Open `template.tf` file and comment out or set `prevent_destroy = false` in the `lifecycle` block.
+2. **Run Destroy:**
 
 ```bash
 tofu destroy
 ```
 
-> [!NOTE]
-Delete the baked image manually in GCP when it's no longer referenced by any template.
+> [!IMPORTANT]
+> **Manual Cleanup Required:** The `tofu destroy` command only affects resources currently managed by the state file.
+> Any templates previously removed via `tofu state rm` or baked images stored in GCP must be deleted manually
+> in the GCP Console when they are no longer needed.
 
 ## Required Secrets for using the GCP Instance Template
 

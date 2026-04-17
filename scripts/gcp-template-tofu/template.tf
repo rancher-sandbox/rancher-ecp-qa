@@ -35,6 +35,11 @@ resource "google_compute_instance_template" "template" {
     }
   }
 
+  lifecycle {
+    # Prevent accidental deletion of existing instance template
+    prevent_destroy = true
+  }
+
   disk {
     source_image = data.google_compute_image.my_image.self_link
     auto_delete  = true
