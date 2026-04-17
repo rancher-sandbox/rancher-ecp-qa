@@ -1,0 +1,19 @@
+# State files
+*.tfstate
+*.tfstate.*
+
+# Terraform working directory
+.terraform/
+
+# Dependency lock
+.terraform.lock.hcl
+
+# Variable definitions
+terraform.tfvars
+image.auto.tfvars
+
+# Log files
+baking-*-up*.log*
+
+# Environment file
+.env
