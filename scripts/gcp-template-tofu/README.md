@@ -67,7 +67,7 @@ Use this value in GitHub workflows to launch runner VMs from the correct templat
 By default, OpenTofu ensures that the infrastructure matches the code. If you update the configuration, it will attempt to replace the existing template. To prevent this and keep the old template active in GCP while creating a new one, follow these steps:
 
 ### 1. Resource protection
-This repository already sets `prevent_destroy = true` on `google_compute_instance_template.template`, so no extra action is needed here. Keep this safeguard in place to avoid accidental deletion during `tofu apply`.
+This repository already sets `prevent_destroy = true` on `google_compute_instance_template.template` in [template.tf](template.tf), so no extra action is needed here. Keep this safeguard in place to avoid accidental deletion during `tofu apply`.
 
 ```hcl
 lifecycle {
