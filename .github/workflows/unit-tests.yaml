@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: cypress-screenshots-${{ matrix.rancher_version }}-${{ github.run_number }}
           path: cypress/screenshots
@@ -53,7 +53,7 @@ jobs:
       - name: Upload Cypress videos
         # Test run video is always captured, so this action uses "always()" condition
         if: always()
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: cypress-videos-${{ matrix.rancher_version }}-${{ github.run_number }}
           path: cypress/videos
