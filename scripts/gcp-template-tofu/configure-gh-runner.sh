@@ -6,10 +6,8 @@ GH_USER=gh-runner
 GCLOUD_BIN=gcloud
 RUNNER_HOME=/home/${GH_USER}
 RUNNER_DIR=${RUNNER_HOME}/actions-runner
-# renovate: datasource=github-releases depName=actions/runner
-RUNNER_VERSION=2.333.1
-# renovate: datasource=custom depName=actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz.sha256
-RUNNER_SHA256=18f8f68ed1892854ff2ab1bab4fcaa2f5abeedc98093b6cb13638991725cab74
+RUNNER_VERSION="2.333.1"
+RUNNER_SHA256="18f8f68ed1892854ff2ab1bab4fcaa2f5abeedc98093b6cb13638991725cab74"
 RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 RUNNER_TAR_FILE=runner.tar.gz
 
