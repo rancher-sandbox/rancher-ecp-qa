@@ -1,0 +1,13 @@
+scm:
+  enabled: true
+  kind: github
+  env_token: UPDATECLI_GITHUB_TOKEN
+  owner: "rancher-sandbox"
+  repository: "rancher-ecp-qa"
+  #username: "updatecli[bot]"
+  #user: "updatecli[bot]"
+  #email: updatecli[bot]@users.noreply.github.com
+  branch: main
+  labels:
+    - "dependencies"
+    - "updatecli"

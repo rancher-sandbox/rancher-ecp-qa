@@ -1,0 +1,52 @@
+name: "[updatecli] Bump GitHub Runner"
+pipelineid: "github_runner_update"
+
+sources:
+  runnerVersion:
+    name: "Get latest GitHub Runner version"
+    kind: "githubrelease"
+    spec:
+      owner: "actions"
+      repository: "runner"
+      token: '{{ requiredEnv "UPDATECLI_GITHUB_TOKEN" }}'
+    transformers:
+      - trimprefix: "v"
+
+  runnerSha:
+    name: "Get GitHub Runner SHA256"
+    kind: "shell"
+    spec:
+      # Read checksum from the release asset metadata (digest) in the GitHub Releases API
+      command: >
+        curl -fsSL https://api.github.com/repos/actions/runner/releases/tags/v{{ source "runnerVersion" }}
+        | jq -r '.assets[] | select(.name == "actions-runner-linux-x64-{{ source "runnerVersion" }}.tar.gz")
+        | .digest | sub("^sha256:"; "")'
+    dependson:
+      - runnerVersion
+
+targets:
+  runnerVersion:
+    name: "Update RUNNER_VERSION"
+    kind: "file"
+    sourceid: runnerVersion
+    # {{ if .scm.enabled }}
+    scmid: default
+    actionid: default
+    # {{ end }}
+    spec:
+      file: "scripts/gcp-template-tofu/configure-gh-runner.sh"
+      matchpattern: 'RUNNER_VERSION=".*"'
+      replacepattern: 'RUNNER_VERSION="{{ source "runnerVersion" }}"'
+
+  runnerSha:
+    name: "Update RUNNER_SHA256"
+    kind: "file"
+    sourceid: runnerSha
+    # {{ if .scm.enabled }}
+    scmid: default
+    actionid: default
+    # {{ end }}
+    spec:
+      file: "scripts/gcp-template-tofu/configure-gh-runner.sh"
+      matchpattern: 'RUNNER_SHA256=".*"'
+      replacepattern: 'RUNNER_SHA256="{{ source "runnerSha" }}"'
