@@ -51,4 +51,8 @@ scms:
       url: '{{ .scm.url }}'
       # {{ end }}
       force: true
+      # {{ if .scm.commitmessage.footers }}
+      commitmessage:
+        footers: '{{ .scm.commitmessage.footers }}'
+      # {{ end }}
 # {{ end }}

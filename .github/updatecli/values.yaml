@@ -12,3 +12,5 @@ scm:
   labels:
     - "dependencies"
     - "updatecli"
+  commitmessage:
+    footers: "Signed-off-by: updatecli[bot] <updatecli[bot]@users.noreply.github.com>"
