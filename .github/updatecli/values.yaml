@@ -8,6 +8,7 @@ scm:
   #user: "updatecli[bot]"
   #email: updatecli[bot]@users.noreply.github.com
   branch: main
+  commitusingapi: true
   labels:
     - "dependencies"
     - "updatecli"
