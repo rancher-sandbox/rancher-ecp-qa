@@ -13,4 +13,4 @@ scm:
     - "dependencies"
     - "updatecli"
   commitmessage:
-    footers: "Signed-off-by: updatecli[bot] <updatecli[bot]@users.noreply.github.com>"
+    footers: "Signed-off-by: Tomas Hehejik <thehejik@suse.com>"
