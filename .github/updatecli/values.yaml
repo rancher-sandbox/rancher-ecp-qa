@@ -1,5 +1,5 @@
 scm:
-  enabled: false
+  enabled: true
   kind: github
   env_token: UPDATECLI_GITHUB_TOKEN
   owner: "rancher-sandbox"
