@@ -8,6 +8,9 @@ scm:
   #user: "updatecli[bot]"
   #email: updatecli[bot]@users.noreply.github.com
   branch: main
+  commitusingapi: true
   labels:
     - "dependencies"
     - "updatecli"
+  commitmessage:
+    footers: "Signed-off-by: Tomas Hehejik <thehejik@suse.com>"
