@@ -70,11 +70,11 @@ export function addRepository(repositoryName, repositoryURL, repositoryType, rep
   cy.contains('Loading...', {timeout: 35000}).should('not.exist');
   cy.contains('header', 'Repositories')
     .should('be.visible');
-  cy.contains('Create')
+  cy.getBySel('app-cluster-repo-list')
     .should('be.visible');
 
-  cy.clickButton('Create');
-  cy.contains('Repository: Create')
+  cy.getBySel('masthead-create').click();
+  cy.contains('Repository:')
     .should('be.visible');
   cy.typeValue('Name', repositoryName);
   if (repositoryType === 'git') {
@@ -85,7 +85,7 @@ export function addRepository(repositoryName, repositoryURL, repositoryType, rep
   } else {
     cy.typeValue('Index URL', repositoryURL);
   }
-  cy.clickButton('Create');
+  cy.getBySel('async-btn-display-label').click();
   // Make sure the repo is active before leaving
   cy.contains(new RegExp('Active.*'+repositoryName))
 };
@@ -102,7 +102,7 @@ export function deleteRepository(repositoryName) {
   // Make sure we are in the 'Repositories' screen (test failed here before)
   cy.contains('header', 'Repositories')
     .should('be.visible');
-  cy.contains('Create')
+  cy.getBySel('app-cluster-repo-list')
     .should('be.visible');
   cy.contains(new RegExp('Active.*'+repositoryName))
     .click();
