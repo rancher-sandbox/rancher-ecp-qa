@@ -50,3 +50,14 @@ targets:
       file: "scripts/gcp-template-tofu/configure-gh-runner.sh"
       matchpattern: 'RUNNER_SHA256=".*"'
       replacepattern: 'RUNNER_SHA256="{{ source "runnerSha" }}"'
+
+  manualActionNeeded:
+    dependsOn:
+      - source.runnerVersion
+      - source.runnerSha
+    name: '⚠️  ACTION REQUIRED: echo -n "{{ source "runnerVersion" }}:{{ source "runnerSha" }}" | gcloud secrets versions add RUNNER_VERSION_SHA256 --data-file=-'
+    kind: "shell"
+    disablesourceinput: true
+    spec:
+      command: |
+        true # just a placeholder to create a manual action in the updatecli report, the actual command is in the name fields
