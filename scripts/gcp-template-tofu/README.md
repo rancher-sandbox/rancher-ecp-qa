@@ -113,6 +113,7 @@ The runner bootstrap script reads these Google Secret Manager secrets:
 
 - `GH_REPO_<uuid>`
 - `PAT_TOKEN_<uuid>`
+- `RUNNER_VERSION_SHA256` (optional, set to override the default runner version and SHA256)
 
 `<uuid>` is the hostname suffix and must be 32 lowercase hex characters without dashes.
 
@@ -120,10 +121,12 @@ Example values:
 
 - `GH_REPO_<uuid>`: owner/repo
 - `PAT_TOKEN_<uuid>`: GitHub PAT with permission to request runner registration token
+- `RUNNER_VERSION_SHA256`: runner version and SHA256 in format "VERSION:SHA256" (optional)
 
 Create or update secrets with gcloud (normally handled by the `create-runner` job in the main workflow):
 
 ```bash
 echo -n 'owner/repo' | gcloud secrets create GH_REPO_<uuid> --ttl="36000s" --quiet --data-file=-
 echo -n '<github-pat>' | gcloud secrets create PAT_TOKEN_<uuid> --ttl="36000s" --quiet --data-file=-
+echo -n '2.335.1:4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf' | gcloud secrets create RUNNER_VERSION_SHA256 --data-file=-
 ```
