@@ -8,7 +8,6 @@ RUNNER_HOME=/home/${GH_USER}
 RUNNER_DIR=${RUNNER_HOME}/actions-runner
 RUNNER_VERSION="2.335.1"
 RUNNER_SHA256="4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf"
-RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 RUNNER_TAR_FILE=runner.tar.gz
 
 echo "$0: started"
@@ -47,6 +46,17 @@ if [[ -z "${PAT_TOKEN}" ]]; then
   echo "$0: PAT_TOKEN not found! stopped"
   exit 1
 fi
+
+# Static secret containg GitHub runner version and its SHA256, in format "VERSION:SHA256"
+RUNNER_VERSION_SHA256=$(${GCLOUD_BIN} secrets versions access latest --secret="RUNNER_VERSION_SHA256")
+if [[ -z "${RUNNER_VERSION_SHA256}" ]]; then
+  echo "$0: Secret RUNNER_VERSION_SHA256 not found! Using default values"
+  RUNNER_VERSION_SHA256="${RUNNER_VERSION}:${RUNNER_SHA256}"
+fi
+
+RUNNER_VERSION=$(echo "${RUNNER_VERSION_SHA256}" | cut -d: -f1)
+RUNNER_SHA256=$(echo "${RUNNER_VERSION_SHA256}" | cut -d: -f2)
+RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 
 # Generate registration token
 # Keep -X POST and --data-raw "" on the same line with curl to ensure the security scan will detect it as API call
