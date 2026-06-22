@@ -6,8 +6,8 @@ GH_USER=gh-runner
 GCLOUD_BIN=gcloud
 RUNNER_HOME=/home/${GH_USER}
 RUNNER_DIR=${RUNNER_HOME}/actions-runner
-RUNNER_VERSION="2.334.0"
-RUNNER_SHA256="048024cd2c848eb6f14d5646d56c13a4def2ae7ee3ad12122bee960c56f3d271"
+RUNNER_VERSION="2.335.1"
+RUNNER_SHA256="4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf"
 RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 RUNNER_TAR_FILE=runner.tar.gz
 
