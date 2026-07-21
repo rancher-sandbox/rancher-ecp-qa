@@ -64,7 +64,7 @@ if RUNNER_VERSION_SHA256=$(${GCLOUD_BIN} secrets versions access latest --secret
   RUNNER_SHA256=$(echo "${RUNNER_VERSION_SHA256}" | cut -d: -f2)
 else
   echo "$0: Secret RUNNER_VERSION_SHA256 not found! Using default values"
-  RUNNER_VERSION="2.335.1"
+  RUNNER_VERSION="2.336.0"
   RUNNER_SHA256="4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf"
 fi
 RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
