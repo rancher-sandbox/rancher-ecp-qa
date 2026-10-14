@@ -23,10 +23,10 @@ This script is used as the startup script during image baking and is the correct
 
 ## Bake the Image
 
-Set `FAMILY` and `ZONE` and run:
+Set `FAMILY`, `ZONE` and `ARCH` (optional, defaults to "x86_64") and run:
 
 ```bash
-FAMILY=turtles-ci-runners ZONE=asia-south1-c ./bake-template-image.sh
+FAMILY=rancher-turtles-e2e-ci-runners ZONE=europe-west4-c [ARCH=<x86_64|aarch64>] ./bake-template-image.sh
 ```
 
 On success, the script creates a new image and writes the image name to `image.auto.tfvars`.
@@ -48,6 +48,8 @@ Edit `terraform.tfvars` and set at least:
 - team
 - vpc
 - subnet
+- arch (e.g., "x86_64" or "aarch64")
+- machine_type (e.g., "n2-highmem-16" for x86_64 or "t2a-standard-16" for aarch64)
 
 ## Deploy the GCP Instance Template (OpenTofu)
 
@@ -114,6 +116,7 @@ The runner bootstrap script reads these Google Secret Manager secrets:
 - `GH_REPO_<uuid>`
 - `PAT_TOKEN_<uuid>`
 - `RUNNER_VERSION_SHA256` (optional, set to override the default runner version and SHA256)
+- `RUNNER_VERSION_SHA256_ARM64` (optional, set to override the default ARM64 runner version and SHA256)
 
 `<uuid>` is the hostname suffix and must be 32 lowercase hex characters without dashes.
 
@@ -122,11 +125,13 @@ Example values:
 - `GH_REPO_<uuid>`: owner/repo
 - `PAT_TOKEN_<uuid>`: GitHub PAT with permission to request runner registration token
 - `RUNNER_VERSION_SHA256`: runner version and SHA256 in format "VERSION:SHA256" (optional)
+- `RUNNER_VERSION_SHA256_ARM64`: ARM64 runner version and SHA256 in format "VERSION:SHA256" (optional)
 
 Create or update secrets with gcloud (normally handled by the `create-runner` job in the main workflow):
 
 ```bash
 echo -n 'owner/repo' | gcloud secrets create GH_REPO_<uuid> --ttl="36000s" --quiet --data-file=-
 echo -n '<github-pat>' | gcloud secrets create PAT_TOKEN_<uuid> --ttl="36000s" --quiet --data-file=-
-echo -n '2.335.1:4ef2f25285f0ae4477f1fe1e346db76d2f3ebf03824e2ddd1973a2819bf6c8cf' | gcloud secrets create RUNNER_VERSION_SHA256 --data-file=-
+echo -n "2.338.0:af4b794c1bc41d73d40535e3fe092a39f9679cd8d965954c2aca25a05ca41d32" | gcloud secrets create RUNNER_VERSION_SHA256 --data-file=-
+echo -n "2.338.0:628b4a7258487b80c1d3c221095a7ded349f5ae0175fd3dfab708d07428f041b" | gcloud secrets create RUNNER_VERSION_SHA256_ARM64 --data-file=-
 ```

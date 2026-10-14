@@ -8,6 +8,14 @@ RUNNER_HOME=/home/${GH_USER}
 RUNNER_DIR=${RUNNER_HOME}/actions-runner
 RUNNER_TAR_FILE=runner.tar.gz
 
+# Set architecture for the runner package based on the system architecture
+case "$(uname -m)" in
+  x86_64) ARCH=x64 ;;
+  aarch64) ARCH=arm64 ;;
+  *) echo "$0: unsupported architecture '$(uname -m)' for GitHub Actions runner"; exit 1 ;;
+esac
+
+
 echo "$0: started"
 
 # Add $GH_USER user
@@ -58,16 +66,35 @@ if [[ -z "${TOKEN}" || "${TOKEN}" == "null" ]]; then
   exit 1
 fi
 
-# Try to get runner version and SHA256 from secret, fallback to hardcoded defaults
-if RUNNER_VERSION_SHA256=$(${GCLOUD_BIN} secrets versions access latest --secret="RUNNER_VERSION_SHA256" 2>/dev/null); then
+# Map secret name directly per architecture
+case "${ARCH}" in
+  x64)   SECRET_NAME="RUNNER_VERSION_SHA256" ;;
+  arm64) SECRET_NAME="RUNNER_VERSION_SHA256_ARM64" ;;
+esac
+
+# Try to get runner version and SHA256 from secret, fallback to hardcoded defaults per architecture
+if RUNNER_VERSION_SHA256=$(${GCLOUD_BIN} secrets versions access latest --secret="${SECRET_NAME}" 2>/dev/null); then
   RUNNER_VERSION=$(echo "${RUNNER_VERSION_SHA256}" | cut -d: -f1)
   RUNNER_SHA256=$(echo "${RUNNER_VERSION_SHA256}" | cut -d: -f2)
 else
-  echo "$0: Secret RUNNER_VERSION_SHA256 not found! Using default values"
-  RUNNER_VERSION="2.336.0"
-  RUNNER_SHA256="04cf0be1aff4c3ec3554466c39124ca250e3effd8873bb7e8d68535aa9505d5d"
+  echo "$0: Secret ${SECRET_NAME} not found! Using default values"
+  RUNNER_VERSION="2.338.0"
+case "${ARCH}" in
+    x64)
+      RUNNER_SHA256="af4b794c1bc41d73d40535e3fe092a39f9679cd8d965954c2aca25a05ca41d32" # x64
+      ;;
+    arm64)
+      RUNNER_SHA256="628b4a7258487b80c1d3c221095a7ded349f5ae0175fd3dfab708d07428f041b" # arm64
+      ;;
+  esac
 fi
-RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
+
+if [[ -z "${RUNNER_SHA256}" ]]; then
+  echo "$0: SHA256 checksum for architecture '${ARCH}' was not found in secret or fallback"
+  exit 1
+fi
+
+RUNNER_PKG="https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-${ARCH}-${RUNNER_VERSION}.tar.gz"
 
 # Run script to download and configure GitHub runner
 sudo -u ${GH_USER} bash -c "

@@ -1,12 +1,14 @@
 project_id = "my-gcp-project"
 service_account_email = "my-sa-email@my-gcp-project.iam.gserviceaccount.com"
-region = "asia-south1"
-zone = "asia-south1-c"
+region = "europe-west4"
+zone = "europe-west4-c"
 team = "my-team"
 # image comes from bake-template-image.sh script which writes the created image name to image.auto.tfvars file. You can also specify an existing image here.
 #image = "my-image"
 vpc = "my-existing-vpc"
 subnet = "my-existing-vpc-subnet"
-machine_type = "n2-highmem-8"
+# arch = "aarch64" # Uncomment for "aarch64", default is "x86_64"
+machine_type = "n2-highmem-16"
+# machine_type = "t2a-standard-16" # ARM64, 16 vCPUs / 64 GB RAM
 disk_size_gb = 80
 spot = true
