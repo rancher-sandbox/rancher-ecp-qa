@@ -26,7 +26,7 @@ This script is used as the startup script during image baking and is the correct
 Set `FAMILY`, `ZONE` and `ARCH` (optional, defaults to "x86_64") and run:
 
 ```bash
-FAMILY=rancher-turtles-e2e-ci-runners ZONE=europe-west4-c [ARCH=<x86_64|aarch64>] ./bake-template-image.sh
+FAMILY=rancher-turtles-e2e-ci-runners ZONE=europe-west4-c ARCH=aarch64 ./bake-template-image.sh
 ```
 
 On success, the script creates a new image and writes the image name to `image.auto.tfvars`.
