@@ -9,7 +9,7 @@
 .terraform.lock.hcl
 
 # Variable definitions
-terraform.tfvars
+terraform.tfvars*
 image.auto.tfvars
 
 # Log files

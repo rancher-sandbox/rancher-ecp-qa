@@ -12,21 +12,31 @@ sources:
     transformers:
       - trimprefix: "v"
 
-  runnerSha:
-    name: "Get GitHub Runner SHA256"
+  runnerShaX64:
+    name: "Get GitHub Runner x64 SHA256"
     kind: "shell"
+    dependson:
+      - runnerVersion
     spec:
-      # Read checksum from the release asset metadata (digest) in the GitHub Releases API
       command: >
         curl -fsSL https://api.github.com/repos/actions/runner/releases/tags/v{{ source "runnerVersion" }}
         | jq -r '.assets[] | select(.name == "actions-runner-linux-x64-{{ source "runnerVersion" }}.tar.gz")
         | .digest | sub("^sha256:"; "")'
+
+  runnerShaArm64:
+    name: "Get GitHub Runner ARM64 SHA256"
+    kind: "shell"
     dependson:
       - runnerVersion
+    spec:
+      command: >
+        curl -fsSL https://api.github.com/repos/actions/runner/releases/tags/v{{ source "runnerVersion" }}
+        | jq -r '.assets[] | select(.name == "actions-runner-linux-arm64-{{ source "runnerVersion" }}.tar.gz")
+        | .digest | sub("^sha256:"; "")'
 
 targets:
   runnerVersion:
-    name: "Update RUNNER_VERSION"
+    name: "Update RUNNER_VERSION default"
     kind: "file"
     sourceid: runnerVersion
     # {{ if .scm.enabled }}
@@ -38,26 +48,48 @@ targets:
       matchpattern: 'RUNNER_VERSION=".*"'
       replacepattern: 'RUNNER_VERSION="{{ source "runnerVersion" }}"'
 
-  runnerSha:
-    name: "Update RUNNER_SHA256"
+  runnerShaX64:
+    name: "Update x64 RUNNER_SHA256 default"
     kind: "file"
-    sourceid: runnerSha
+    sourceid: runnerShaX64
     # {{ if .scm.enabled }}
     scmid: default
     actionid: default
     # {{ end }}
     spec:
       file: "scripts/gcp-template-tofu/configure-gh-runner.sh"
-      matchpattern: 'RUNNER_SHA256=".*"'
-      replacepattern: 'RUNNER_SHA256="{{ source "runnerSha" }}"'
+      matchpattern: 'RUNNER_SHA256=".*" # x64'
+      replacepattern: 'RUNNER_SHA256="{{ source "runnerShaX64" }}" # x64'
 
-  manualActionNeeded:
+  runnerShaArm64:
+    name: "Update ARM64 RUNNER_SHA256 default"
+    kind: "file"
+    sourceid: runnerShaArm64
+    # {{ if .scm.enabled }}
+    scmid: default
+    actionid: default
+    # {{ end }}
+    spec:
+      file: "scripts/gcp-template-tofu/configure-gh-runner.sh"
+      matchpattern: 'RUNNER_SHA256=".*" # arm64'
+      replacepattern: 'RUNNER_SHA256="{{ source "runnerShaArm64" }}" # arm64'
+
+  manualActionNeededX64:
     dependsOn:
       - source.runnerVersion
-      - source.runnerSha
-    name: '⚠️  ACTION REQUIRED: echo -n "{{ source "runnerVersion" }}:{{ source "runnerSha" }}" | gcloud secrets versions add RUNNER_VERSION_SHA256 --data-file=-'
+      - source.runnerShaX64
+    name: '⚠️  ACTION REQUIRED (x64): echo -n "{{ source "runnerVersion" }}:{{ source "runnerShaX64" }}" | gcloud secrets versions add RUNNER_VERSION_SHA256 --data-file=-'
     kind: "shell"
     disablesourceinput: true
     spec:
-      command: |
-        true # just a placeholder to create a manual action in the updatecli report, the actual command is in the name fields
+      command: "true"
+
+  manualActionNeededArm64:
+    dependsOn:
+      - source.runnerVersion
+      - source.runnerShaArm64
+    name: '⚠️  ACTION REQUIRED (ARM64): echo -n "{{ source "runnerVersion" }}:{{ source "runnerShaArm64" }}" | gcloud secrets versions add RUNNER_VERSION_SHA256_ARM64 --data-file=-'
+    kind: "shell"
+    disablesourceinput: true
+    spec:
+      command: "true"

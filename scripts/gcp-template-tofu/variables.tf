@@ -49,6 +49,12 @@ variable "machine_type" {
   description = "GCP machine type"
 }
 
+variable "arch" {
+  type        = string
+  default     = "x86_64"
+  description = "System architecture (e.g. x86_64 or aarch64)"
+}
+
 variable "disk_size_gb" {
   type        = number
   default     = 80
