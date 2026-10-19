@@ -33,7 +33,7 @@ case "${ARCH}" in
     ARCH_FAMILY_SUFFIX="-arm64"
     ;;
   x86_64|amd64)
-    ARCH="amd64" # GCP instance name can't contain underscores
+    ARCH="amd64" # GCP instance name can't contain underscores like in "x86_64"
     MACHINE_TYPE="${MACHINE_TYPE:-n2-standard-4}"
     ARCH_VALUE="X86_64"
     ARCH_FAMILY_SUFFIX=""

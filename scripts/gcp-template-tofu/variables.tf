@@ -53,6 +53,11 @@ variable "arch" {
   type        = string
   default     = "x86_64"
   description = "System architecture (e.g. x86_64 or aarch64)"
+
+  validation {
+    condition     = contains(["x86_64", "aarch64"], var.arch)
+    error_message = "The architecture must be either x86_64 or aarch64."
+  }
 }
 
 variable "disk_size_gb" {

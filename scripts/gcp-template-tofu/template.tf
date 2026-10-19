@@ -4,7 +4,7 @@ data "google_compute_network" "vpc" {
 }
 
 data "google_compute_subnetwork" "subnet" {
-  name    = var.vpc
+  name    = var.subnet
   region  = var.region
   project = var.project_id
 }
