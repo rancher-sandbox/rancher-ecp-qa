@@ -1,11 +1,11 @@
 data "google_compute_network" "vpc" {
-  name = var.vpc
+  name    = var.vpc
   project = var.project_id
 }
 
 data "google_compute_subnetwork" "subnet" {
-  name = var.vpc
-  region = var.region
+  name    = var.subnet
+  region  = var.region
   project = var.project_id
 }
 
@@ -16,7 +16,7 @@ data "google_compute_image" "my_image" {
 
 # Instance template with safe update strategy
 resource "google_compute_instance_template" "template" {
-  name_prefix  = "${var.team}-ci-${var.spot ? "spot" : "standard"}-"
+  name  = "${var.team}-ci-${var.arch == "x86_64" ? "amd64" : var.arch}-${var.spot ? "spot" : "standard"}-${formatdate("YYYYMMDD-hhmm", timestamp())}"
   machine_type = var.machine_type
   region       = var.region
 
@@ -49,12 +49,13 @@ resource "google_compute_instance_template" "template" {
   }
 
   network_interface {
-    network = data.google_compute_network.vpc.self_link
+    network    = data.google_compute_network.vpc.self_link
     subnetwork = data.google_compute_subnetwork.subnet.self_link
     access_config {
       # Ephemeral IP - leave nat_ip empty
     }
   }
+
   service_account {
     # Replace with your actual existing SA email
     email  = var.service_account_email
@@ -65,11 +66,12 @@ resource "google_compute_instance_template" "template" {
   }
 
   metadata = {
-   # enable-oslogin = "TRUE"
+    # enable-oslogin = "TRUE"
   }
 
   shielded_instance_config {
-    enable_secure_boot          = true
+    # Secure Boot is not supported on ARM (aarch64) in GCP
+    enable_secure_boot          = var.arch == "aarch64" ? false : true
     enable_vtpm                 = true
     enable_integrity_monitoring = true
   }
@@ -81,9 +83,10 @@ resource "google_compute_instance_template" "template" {
   labels = {
     team = var.team
     os   = "opensuse-leap"
+    arch = var.arch
   }
 }
 
 output "latest_template_name" {
-  value = google_compute_instance_template.template.name
+  value = nonsensitive(google_compute_instance_template.template.name)
 }

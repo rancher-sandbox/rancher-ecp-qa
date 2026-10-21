@@ -1,9 +1,18 @@
 #!/bin/bash
 set -e
 
+# Detect architecture for Google Cloud SDK repository URL
+ARCH=$(uname -m)
+
+# Only support x86_64 and aarch64 architectures for now
+if [[ "$ARCH" != "x86_64" && "$ARCH" != "aarch64" ]]; then
+  echo "Unsupported architecture: $ARCH"
+  exit 1
+fi
+
 # Install dependencies
 if true; then
-  zypper addrepo -f https://packages.cloud.google.com/yum/repos/cloud-sdk-el8-x86_64 google-cloud-sdk
+  zypper addrepo -f https://packages.cloud.google.com/yum/repos/cloud-sdk-el9-${ARCH} google-cloud-sdk
   zypper addrepo -f https://cli.github.com/packages/rpm/gh-cli.repo
   zypper --gpg-auto-import-keys refresh
   zypper --non-interactive update
@@ -51,5 +60,5 @@ sync
 
 # Turn off the bake VM when done
 echo "BAKING_COMPLETE"
-sleep 5 # Sleep for a few seconds to ensure the message is logged before shutdown
-shutdown -h now
+sleep 10 # Sleep for a few seconds to ensure the message is logged before shutdown
+shutdown -h now "BAKING_COMPLETE" # Report to wall once again to make sure the message is really logged before shutdown
