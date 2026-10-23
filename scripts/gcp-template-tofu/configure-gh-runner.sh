@@ -78,7 +78,7 @@ if RUNNER_VERSION_SHA256=$(${GCLOUD_BIN} secrets versions access latest --secret
   RUNNER_SHA256=$(echo "${RUNNER_VERSION_SHA256}" | cut -d: -f2)
 else
   echo "$0: Secret ${SECRET_NAME} not found! Using default values"
-  RUNNER_VERSION="2.338.0"
+  RUNNER_VERSION="2.338.1"
 case "${ARCH}" in
     x64)
       RUNNER_SHA256="af4b794c1bc41d73d40535e3fe092a39f9679cd8d965954c2aca25a05ca41d32" # x64
