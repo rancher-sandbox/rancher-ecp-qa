@@ -84,7 +84,7 @@ case "${ARCH}" in
       RUNNER_SHA256="baebf204307bac6193480852732f0aba2ae97b6c5597c244f4d5558390147c40" # x64
       ;;
     arm64)
-      RUNNER_SHA256="475e0c149fd3b611610127b9664ba5bacf5c6928795cc448ab520bb5f324bede" # arm64
+      RUNNER_SHA256="670adb2f268fe21dcbb58b3db0e0aa9d5b3bddfe2c651481336e561ff86de945" # arm64
       ;;
   esac
 fi
